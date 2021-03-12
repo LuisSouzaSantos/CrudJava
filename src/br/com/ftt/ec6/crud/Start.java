@@ -1,38 +1,24 @@
 package br.com.ftt.ec6.crud;
 
-import java.util.Scanner;
-
-import br.com.ftt.ec6.crud.entity.Login;
-import br.com.ftt.ec6.crud.entity.dao.LoginDAO;
+import br.com.ftt.ec6.crud.state.StateMachine;
+import br.com.ftt.ec6.crud.state.States;
+import br.com.ftt.ec6.crud.state.StatesResponse;
 
 public class Start{
 	
+	public static StateMachine stateMachine;
+	
 	public static void main(String[] args) {
 		
-		String option = null;
-		Scanner scanner = new Scanner(System.in);
+		stateMachine = States.LOGIN.getStateMachine();
+		StatesResponse statesResponse = StatesResponse.SUCCESS;
 		
-		while(option != "9") {
-			try {
-				option = scanner.nextLine();
-				
-				if(option.equals("1")) {
-					System.out.println("Escreva o username");
-					String username = scanner.nextLine();
-					System.out.println("Escreva o username");
-					String password = scanner.nextLine();
-					LoginDAO loginDAO = new LoginDAO();
-					Login login = loginDAO.getLogin(username);
-					System.out.println(login.getUsername()+login.getPassword());
-				}
-				
-				
-			}catch(Exception e) {
-				
-			}
+		while(statesResponse != StatesResponse.TERMINATE) {
+			statesResponse = stateMachine.run();
 		}
 		
-		scanner.close();
+		System.out.println("Sistema encerrado");
+		
 	}
 
 }
