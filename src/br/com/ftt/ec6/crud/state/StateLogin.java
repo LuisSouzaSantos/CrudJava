@@ -3,17 +3,14 @@ package br.com.ftt.ec6.crud.state;
 import java.util.Scanner;
 
 import br.com.ftt.ec6.crud.Start;
-import br.com.ftt.ec6.crud.dao.LoginDAO;
 import br.com.ftt.ec6.crud.service.LoginService;
 
 public class StateLogin extends StateMachine {
 
-	
-	Scanner scanner = new Scanner(System.in);
-	LoginService loginService =  new LoginService(LoginDAO.getInstance());
+	LoginService loginService =  new LoginService();
 	
 	@Override
-	public StatesResponse run() {
+	public StatesResponse run(Scanner scanner) {
 		boolean isInvalidLogin = true;
 		System.out.println("1 - Realizar Login");
 		System.out.println("2 - Sair");
@@ -22,6 +19,7 @@ public class StateLogin extends StateMachine {
 			String option = scanner.nextLine();
 			if(Integer.parseInt(option) != 1) {
 				return StatesResponse.TERMINATE;
+				
 			}
 		}catch(NumberFormatException e) {
 			return StatesResponse.ERROR;

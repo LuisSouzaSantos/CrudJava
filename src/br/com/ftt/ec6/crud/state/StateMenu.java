@@ -7,14 +7,15 @@ import br.com.ftt.ec6.crud.Start;
 public class StateMenu extends StateMachine {
 
 	@Override
-	public StatesResponse run() {
+	public StatesResponse run(Scanner scanner) {
 		System.out.println("-------------  Menu Principal -------------");
-		Scanner scanner = new Scanner(System.in);
+		
 		System.out.println("0 - Leitura");
         System.out.println("1 - Novo cadastro");
         System.out.println("2 - Editar");
         System.out.println("3 - Listar");
         System.out.println("4 - Excluir");
+        System.out.println("5 - Sair");
 		
 		int option = scanner.nextInt();
 		
@@ -26,26 +27,21 @@ public class StateMenu extends StateMachine {
             case 1:
             	Start.stateMachine = States.CREATE_CLOTHING.getStateMachine();
                 break;
-//            case 2:
-//                Main.estadoConsole = EnumEstadoConsole.EDITAR.getEstadoMaquina();
-//                break;
-//            case 3:
-//                Main.estadoConsole = EnumEstadoConsole.LISTAR.getEstadoMaquina();
-//                break;
-//            case 4:
-//                Main.estadoConsole = EnumEstadoConsole.EXCLUIR.getEstadoMaquina();
-//                break;
-//            case 5:
-//                Main.estadoConsole = EnumEstadoConsole.SALVAR.getEstadoMaquina();
-//                break;
-//            case 6:
-//                exit = true;
-//                break;
+            case 2:
+            	Start.stateMachine = States.EDIT_CLOTHING.getStateMachine();
+                break;
+            case 3:
+            	Start.stateMachine = States.LIST_CLOTHING.getStateMachine();
+                break;
+            case 4:
+            	Start.stateMachine = States.DELETE_CLOTHING.getStateMachine();
+                break;
+            case 5:
+                return StatesResponse.TERMINATE;
             default:
             	break;
         }
-		
-		
+
 		return StatesResponse.SUCCESS;
 	}
 

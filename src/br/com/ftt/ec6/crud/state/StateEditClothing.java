@@ -3,6 +3,7 @@ package br.com.ftt.ec6.crud.state;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 import br.com.ftt.ec6.crud.Start;
@@ -11,13 +12,48 @@ import br.com.ftt.ec6.crud.helpers.Color;
 import br.com.ftt.ec6.crud.helpers.Size;
 import br.com.ftt.ec6.crud.service.ClothingService;
 
-public class StateCreateClothing extends StateMachine {
-	
+public class StateEditClothing extends StateMachine {
+
 	ClothingService clothingService = new ClothingService();
 
 	@Override
 	public StatesResponse run(Scanner scanner) {
-		System.out.println("------------- Criação -------------");
+		List<ClothingStock> clothingStockList = clothingService.getClothingStockList();
+		
+		if(clothingStockList.isEmpty()) { 
+			System.out.println("Lista Vazia");
+			Start.stateMachine = States.MENU.getStateMachine();
+			return StatesResponse.SUCCESS;
+		}
+		
+		System.out.println("------------------------  Listagem para edição  ------------------------");
+		clothingStockList.stream().forEach(clothingStock -> System.out.println(clothingStock.toString()));
+		System.out.println("------------------------  Fim Listagem edição ------------------------");
+		
+		System.out.println("------------------------  Escolha um id para ser editado ------------------------");
+		String inputChosenId = null;
+		Long choseId = null;
+		
+		while(inputChosenId == null) { 
+			try {
+				inputChosenId = scanner.nextLine();
+				choseId = Long.parseLong(inputChosenId);
+			} catch (Exception e) {
+				System.out.println("ID inválido");
+				inputChosenId = null;
+			}
+		}
+		
+		ClothingStock retrievedClothingStock = clothingService.getClothingStockById(choseId);
+		
+		if(retrievedClothingStock == null) { 
+			System.out.println("Esse item não existe");
+			Start.stateMachine = States.MENU.getStateMachine();
+			return StatesResponse.SUCCESS;
+		}
+		
+		
+		System.out.println("------------- Edição -------------");
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -28,9 +64,9 @@ public class StateCreateClothing extends StateMachine {
             try {
             	inputDate = scanner.nextLine();
             	date = simpleDateFormat.parse(inputDate);
-    		} catch (ParseException e) { 
-    			System.out.println("Data inválida. Digite uma data válida!!");
-    			inputDate = null;
+    		} catch (ParseException e) {
+    			inputDate = "";
+    			date = retrievedClothingStock.getEntryDate();
     		}
         }
         
@@ -39,10 +75,8 @@ public class StateCreateClothing extends StateMachine {
         while (inputLocation == null){
 	        try {
 	        	inputLocation = scanner.nextLine();
-            	if(inputLocation == null || inputLocation.isEmpty()) { throw new Exception("Local não pode ser vazio");}
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputLocation = null;
+    			inputLocation = retrievedClothingStock.getPurchaseLocation();
     		}
         }
         
@@ -51,10 +85,8 @@ public class StateCreateClothing extends StateMachine {
         while (inputType == null){
 	        try {
 	        	inputType = scanner.nextLine();
-            	if(inputType == null || inputType.isEmpty()) { throw new Exception("Tipo não pode ser vazio");}
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputType = null;
+    			inputType = retrievedClothingStock.getType();
     		}
         }
         
@@ -63,10 +95,8 @@ public class StateCreateClothing extends StateMachine {
         while (inputBrand == null){
 	        try {
 	        	inputBrand = scanner.nextLine();
-            	if(inputBrand == null || inputBrand.isEmpty()) { throw new Exception("Marca não pode ser vazio");}
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputBrand = null;
+    			inputBrand = retrievedClothingStock.getBrand();
     		}
         }
         
@@ -75,10 +105,8 @@ public class StateCreateClothing extends StateMachine {
         while (inputDescription == null){
 	        try {
 	        	inputDescription = scanner.nextLine();
-            	if(inputDescription == null || inputDescription.isEmpty()) { throw new Exception("Descrição não pode ser vazio");}
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputDescription = null;
+    			inputDescription = retrievedClothingStock.getDescription();
     		}
         }
         
@@ -87,10 +115,8 @@ public class StateCreateClothing extends StateMachine {
         while (inputSize == null){
 	        try {
 	        	inputSize = scanner.nextLine();
-            	if(Size.validate(inputSize) == false) { throw new Exception("Tamanho inválido. Escolha entre P, M, G ou GG");}
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputSize = null;
+    			inputSize = retrievedClothingStock.getSize().name();
     		}
         }
         
@@ -99,10 +125,8 @@ public class StateCreateClothing extends StateMachine {
         while (inputColor == null){
 	        try {
 	        	inputColor = scanner.nextLine();
-            	if(Color.validate(inputColor) == false) { throw new Exception("Cor inválida. Escolha entre Amarelo, Azul, Verde ou Preto");}
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputColor = null;
+    			inputColor = retrievedClothingStock.getColor().name();
     		}
         }
         
@@ -112,8 +136,7 @@ public class StateCreateClothing extends StateMachine {
 	        try {
 	        	inputTagValue = scanner.nextDouble();
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputTagValue = null;
+    			inputTagValue = retrievedClothingStock.getTagValue();
     		}
         }
         
@@ -124,8 +147,7 @@ public class StateCreateClothing extends StateMachine {
 	        try {
 	        	inputValuePaid = scanner.nextDouble();
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputValuePaid = null;
+    			inputValuePaid = retrievedClothingStock.getValuePaid();
     		}
         }
         
@@ -137,8 +159,7 @@ public class StateCreateClothing extends StateMachine {
 	        try {
 	        	inputSuggestedValue = scanner.nextDouble();
     		} catch (Exception e) {
-    			System.out.println(e.getMessage());
-    			inputSuggestedValue = null;
+    			inputSuggestedValue = retrievedClothingStock.getSuggestedValue();
     		}
         }
 		
@@ -146,10 +167,15 @@ public class StateCreateClothing extends StateMachine {
 															inputBrand, inputDescription, Size.getSizeByString(inputSize), Color.getColorByString(inputColor), 
 																inputTagValue, inputValuePaid, profitValue, inputSuggestedValue);
 		
-		clothingService.save(clothingStock);
-		System.out.println("Cadastro realizado com sucesso");
+		String systemResponse = clothingService.edit(choseId, clothingStock);
+		
+		if(systemResponse.equals("SUCCESS")) {
+			System.out.println("Edição realizado com sucesso");
+		}else {
+			System.out.println(systemResponse);
+		}
+		
 		Start.stateMachine = States.MENU.getStateMachine();
 		return StatesResponse.SUCCESS;
 	}
-
 }

@@ -5,11 +5,7 @@ import br.com.ftt.ec6.crud.entity.Login;
 
 public class LoginService {
 	
-	private LoginDAO loginDAO;
-	
-	public LoginService(LoginDAO loginDAO){
-		this.loginDAO = loginDAO;
-	}
+	private LoginDAO loginDAO = LoginDAO.getInstance();
 	
 	public boolean validate(String username, String password) {
 		Login login = loginDAO.getLogin(username);

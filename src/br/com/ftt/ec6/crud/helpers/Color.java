@@ -5,7 +5,7 @@ public enum Color {
 	AMARELO("AMARELO"),
     AZUL("AZUL"),
     VERDE("VERDE"),
-    PRETO("preto");
+    PRETO("PRETO");
 
     private String color;
 

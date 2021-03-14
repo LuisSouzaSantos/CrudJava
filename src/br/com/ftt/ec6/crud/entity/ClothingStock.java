@@ -109,4 +109,12 @@ public class ClothingStock {
 		this.suggestedValue = suggestedValue;
 	}
 	
+	@Override
+	public String toString() {
+		return "ClothingStock [IDENTIFICAOR=" + id + ", DATA DE ENTRADA=" + entryDate + ", LOCAL DE COMPRA=" + purchaseLocation
+				+ ", TIPO=" + type + ", MARCA=" + brand + ", DESCRIÇÃO=" + description + ", TAMANHO=" + size + ", COR="
+				+ color + ", VALOR NA ETIQUETA=" + tagValue + ", VALOR PAGO=" + valuePaid + ", LUCRO =" + profitValue
+				+ ", VALOR SUGERIDO=" + suggestedValue + "]";
+	}
+	
 }

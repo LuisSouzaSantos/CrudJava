@@ -28,26 +28,6 @@ public class ClothingStockDAO {
 		return instance;
 	}
 	
-	public String save(ClothingStock clothingStock) {
-		
-		Long Id = getLastId();
-		
-		String clothingStockString = Id.toString()+SEPARATOR+
-									 clothingStock.getEntryDate().toString()+SEPARATOR+
-									 clothingStock.getPurchaseLocation()+SEPARATOR+
-									 clothingStock.getType()+SEPARATOR+
-									 clothingStock.getBrand()+SEPARATOR+
-									 clothingStock.getDescription()+SEPARATOR+
-									 clothingStock.getSize().name()+SEPARATOR+
-									 clothingStock.getColor().name()+SEPARATOR+
-									 clothingStock.getTagValue().toString()+SEPARATOR+
-									 clothingStock.getValuePaid().toString()+SEPARATOR+
-									 clothingStock.getProfitValue().toString()+SEPARATOR+
-									 clothingStock.getSuggestedValue().toString();
-		
-		return Database.saveLine(FILE_NAME, clothingStockString);
-	}
-	
 	public ClothingStock getClothingStockById(Long id) {
 		
 		Optional<ClothingStock> clothingStockOptional = getClothingStockList()
@@ -60,24 +40,26 @@ public class ClothingStockDAO {
 		return clothingStockOptional.get();
 	}
 	
-	public Long getLastId() {
-		
-		List<ClothingStock> clothingStockList = getClothingStockList();
-		
-		if(clothingStockList == null || clothingStockList.isEmpty()) { return 1L;}
-		
-		Optional<ClothingStock> lastclothingStockStored =  clothingStockList.stream().max(new Comparator<ClothingStock>() {
-			@Override
-			public int compare(ClothingStock clothingStock, ClothingStock clothingStock2) {
-				return Long.compare(clothingStock.getId(), clothingStock2.getId());
-			}
-		});
-		
-		return lastclothingStockStored.get().getId()+1; 
-	}
-	
 	public List<ClothingStock> getClothingStockList(){
 		return getClothingStockListFromFile();
+	}
+	
+	public String save(ClothingStock clothingStock) {
+		Long id = getLastId();
+		clothingStock.setId(id);
+		
+		String clothingStockString = transformToString(clothingStock);
+		
+		return Database.saveLine(FILE_NAME, clothingStockString);
+	}
+	
+	public String delete(ClothingStock clothingStock) {
+		return Database.deleteLine(FILE_NAME, clothingStock.getId());
+	}
+	
+	public String edit(ClothingStock clothingStock) {
+		String clothingStockString = transformToString(clothingStock);
+		return Database.editLine(FILE_NAME, clothingStock.getId(), clothingStockString);
 	}
 	
 	private List<ClothingStock> getClothingStockListFromFile(){
@@ -115,6 +97,46 @@ public class ClothingStockDAO {
 		
 		return new ClothingStock(id, entryDate, purchaseLocation, type, brand, description, size, color, tagValue, valuePaid, profitValue, suggestedValue);
 	}
+	
+	private Long getLastId() {
+		
+		List<ClothingStock> clothingStockList = getClothingStockList();
+		
+		if(clothingStockList == null || clothingStockList.isEmpty()) { return 1L;}
+		
+		Optional<ClothingStock> lastclothingStockStored =  clothingStockList.stream().max(new Comparator<ClothingStock>() {
+			@Override
+			public int compare(ClothingStock clothingStock, ClothingStock clothingStock2) {
+				return Long.compare(clothingStock.getId(), clothingStock2.getId());
+			}
+		});
+		
+		return lastclothingStockStored.get().getId()+1; 
+	}
+	
+	private String transformToString(ClothingStock clothingStock) {
+		
+		String clothingStockString = clothingStock.getId().toString()+SEPARATOR+
+				 simpleDateFormat.format(clothingStock.getEntryDate()).toString()+SEPARATOR+
+				 clothingStock.getPurchaseLocation()+SEPARATOR+
+				 clothingStock.getType()+SEPARATOR+
+				 clothingStock.getBrand()+SEPARATOR+
+				 clothingStock.getDescription()+SEPARATOR+
+				 clothingStock.getSize().name()+SEPARATOR+
+				 clothingStock.getColor().name()+SEPARATOR+
+				 clothingStock.getTagValue().toString()+SEPARATOR+
+				 clothingStock.getValuePaid().toString()+SEPARATOR+
+				 clothingStock.getProfitValue().toString()+SEPARATOR+
+				 clothingStock.getSuggestedValue().toString();
+		
+		return clothingStockString;
+		
+	}
+	
+	
+//	public static void main(String[] args) {
+//		System.out.println(getInstance().delete(2L));
+//	}
 	
 	
 }

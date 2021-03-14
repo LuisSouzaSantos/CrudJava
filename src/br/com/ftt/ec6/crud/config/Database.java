@@ -40,4 +40,66 @@ public class Database {
 		}
 	}
 	
+	public static String editLine(String fileName, Long id, String content) {
+		List<String> objectList = new ArrayList<String>();
+		
+		try {
+			BufferedReader buffRead = new BufferedReader(new FileReader(fileName));
+			String line = buffRead.readLine();
+			while(line != null) {
+				if(line.startsWith(id.toString()) == false) {
+					objectList.add(line);
+				}else {
+					objectList.add(content);
+				}
+				line = buffRead.readLine();
+			}
+			buffRead.close();
+		}catch(IOException e) { return "ERROR";}
+		
+		try {
+			FileWriter fileWriter = new FileWriter(fileName, false);
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+			
+			objectList.stream().forEach(object -> {
+				printWriter.println(object);
+			});
+			
+			printWriter.flush();
+			printWriter.close();
+			return "SUCCESS";
+		} catch (Exception e) { return "ERROR";}
+	
+	}
+	
+	public static String deleteLine(String fileName, Long id) {
+		List<String> objectList = new ArrayList<String>();
+		
+		try {
+			BufferedReader buffRead = new BufferedReader(new FileReader(fileName));
+			String line = buffRead.readLine();
+			while(line != null) {
+				if(line.startsWith(id.toString()) == false) {
+					objectList.add(line);
+				}
+				line = buffRead.readLine();
+			}
+			buffRead.close();
+		}catch(IOException e) { return "ERROR";}
+		
+		try {
+			FileWriter fileWriter = new FileWriter(fileName, false);
+			PrintWriter printWriter = new PrintWriter(fileWriter);
+			
+			objectList.stream().forEach(object -> {
+				printWriter.println(object);
+			});
+			
+			printWriter.flush();
+			printWriter.close();
+			return "SUCCESS";
+		} catch (Exception e) { return "ERROR";}
+		
+	}
+	
 }
