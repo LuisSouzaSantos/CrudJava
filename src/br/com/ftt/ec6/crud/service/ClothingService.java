@@ -12,6 +12,7 @@ public class ClothingService {
 	ClothingStockDAO clothingStockDAO = ClothingStockDAO.getInstance();
 	
 	public String save(ClothingStock clothingStock) {
+		
 		return clothingStockDAO.save(clothingStock);
 	}
 	
@@ -37,7 +38,7 @@ public class ClothingService {
 		if(clothingStock == null) { return "Objecto não encontrado";}
 		
 		newClothingStock.setId(currentClothingStockId);
-		return clothingStockDAO.delete(clothingStock);
+		return clothingStockDAO.edit(clothingStock);
 	}
 	
 	public ClothingStock getClothingStockById(Long id) {

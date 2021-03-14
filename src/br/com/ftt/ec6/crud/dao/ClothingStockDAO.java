@@ -29,7 +29,6 @@ public class ClothingStockDAO {
 	}
 	
 	public ClothingStock getClothingStockById(Long id) {
-		
 		Optional<ClothingStock> clothingStockOptional = getClothingStockList()
 																		.stream()
 																		.filter(clothingStock -> clothingStock.getId().equals(id))
